@@ -17,6 +17,7 @@ parser.add_argument('image', required=True)
 parser.add_argument('size', default='144x152')
 parser.add_argument('dither', default='FloydSteinberg')
 parser.add_argument('format', default='png')
+parser.add_arguemnt('time', default=False)
 
 dithers = ['FloydSteinberg', 'Riemersma']
 
@@ -32,24 +33,40 @@ class RemoteMagick(Resource):
             abort(400)
 
         try:
-            _, png = tempfile.mkstemp(suffix='.png')
-            subprocess.check_call(['convert', args['image'],
-                                   '-type', 'Grayscale',
-                                   '-colorspace', 'Gray',
-                                   '-resize', args['size'] + '^',
-                                   '-gravity', 'center',
-                                   '-extent', args['size'],
-                                   '-dither', args['dither'],
-                                   '-colors', '2',
-                                   '-depth', '1',
-                                   '-define', 'png:compression-level=9',
-                                   '-define', 'png:compression-strategy=0',
-                                   '-define', 'png:exclude-chunk=all',
-                                   '-define', 'png:bit-depth=1',
-                                   '-define', 'png:color-type=0',
-                                   'PNG:' + png])
-        except subprocess.CalledProcessError:
-            abort(400)
+            if (!args['time]):
+                _, png = tempfile.mkstemp(suffix='.png')
+                subprocess.check_call(['convert', args['image'],
+                                       '-type', 'Grayscale',
+                                       '-colorspace', 'Gray',
+                                       '-resize', args['size'] + '^',
+                                       '-gravity', 'center',
+                                       '-extent', args['size'],
+                                       '-dither', args['dither'],
+                                       '-colors', '2',
+                                       '-depth', '1',
+                                       '-define', 'png:compression-level=9',
+                                       '-define', 'png:compression-strategy=0',
+                                       '-define', 'png:exclude-chunk=all',
+                                       '-define', 'png:bit-depth=1',
+                                       '-define', 'png:color-type=0',
+                                       'PNG:' + png])
+                except subprocess.CalledProcessError:
+                    abort(400)
+            
+            else:
+                _, png = tempfile.mkstemp(suffix='.png')
+                subprocess.check_call(['convert', args['image'],
+                                       '-resize', args['size'] + '^',
+                                       '-gravity', 'center',
+                                       '-extent', args['size'],
+                                       '-dither', args['dither'],
+                                       '-remap', 'pebble_colors_64.gif'
+                                       '-define', 'png:compression-level=9',
+                                       '-define', 'png:compression-strategy=0',
+                                       '-define', 'png:exclude-chunk=all',
+                                       'PNG:' + png])
+               except subprocess.CalledProcessError:
+                    abort(400)
 
         if args['format'] == 'png':
             return redirect(png)
