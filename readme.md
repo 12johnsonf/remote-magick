@@ -12,10 +12,11 @@ Currently running on EC2 at `ec2-54-191-195-212.us-west-2.compute.amazonaws.com`
 | `size`   | size to scale the image to  | 144x168                        | matching `^\d+x\d+$`             |
 | `dither` | dither method to use        | FloydSteinberg                 | FloydSteinberg, Riemersma        |
 | `format` | format of output file       | png                            | png, pbi, h                      |
+| `time`   | use colour for pebble times | False                          | True, False
 
 ## Example
 
-`http://ec2-54-191-195-212.us-west-2.compute.amazonaws.com/api?image=http://placekitten.com/330/444&size=144x168&dither=FloydSteinberg&format=png`
+`http://ec2-54-191-195-212.us-west-2.compute.amazonaws.com/api?image=http://placekitten.com/330/444&size=144x168&dither=FloydSteinberg&format=png&time=False`
 
 | Before                                    | After                                    |
 |-------------------------------------------|------------------------------------------|
