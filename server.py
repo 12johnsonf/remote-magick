@@ -33,7 +33,7 @@ class RemoteMagick(Resource):
             abort(400)
 
         try:
-            if (!args['time]):
+            if not args['time']:
                 _, png = tempfile.mkstemp(suffix='.png')
                 subprocess.check_call(['convert', args['image'],
                                        '-type', 'Grayscale',
